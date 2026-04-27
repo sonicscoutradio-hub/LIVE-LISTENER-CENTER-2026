@@ -1375,7 +1375,7 @@ body::after {
 
 .recently-row {
   display: grid;
-  grid-template-columns: 50px 1fr auto auto;
+  grid-template-columns: 50px 1fr auto;
   gap: 10px;
   align-items: center;
   padding: 8px 10px;
@@ -6874,7 +6874,10 @@ function fetchLiveTrack() {
     // Strip any " - " suffix that mentions app/download/featured/sonicscoutradio etc.
     if (liveShow) {
       liveShow = liveShow
-        .replace(/\s*[-–—]\s*(to hear|head to|download|sonicscoutradio|to be featured|featured in this show|get the app|app store|google play).*/i, '')
+        // Strip after " - " if the suffix contains any promo-sounding word
+        .replace(/\s*[-–—]\s*(to hear|head to|download|sonicscoutradio|to be featured|featured in this show|get the app|app store|google play|playing|the best|unsigned|globally|hosted by|live every|tune in|listen).*$/i, '')
+        // Also strip exclamation marks and trailing punctuation runs
+        .replace(/[!?.,\s]+$/, '')
         .trim();
     }
     _liveShowFromApi = liveShow;
@@ -7448,7 +7451,6 @@ function renderRecentlyPlayed() {
         '<div class="recently-title">' + escapeHtml(e.title) + '</div>' +
         '<div class="recently-artist">' + escapeHtml(e.artist) + '</div>' +
       '</div>' +
-      '<span class="recently-show">' + escapeHtml(showName) + '</span>' +
       '<button class="recently-heart-btn ' + heartClass + '" ' +
               'onclick="heartTrackFromList(\'' + aEsc + '\', \'' + tEsc + '\', \'' + escapeHtml(showName) + '\')" ' +
               'title="Heart this track">' + heartIcon +
